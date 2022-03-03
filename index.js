@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 // firebase admin initialization 
 
 
-var serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+var serviceAccount = require("./ema-john-simple-bfb72-firebase-adminsdk-uf6ej-b50e2b6aae.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -21,8 +21,13 @@ admin.initializeApp({
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.swu9d.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.swu9d.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.opn5k.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+
 
 async function verifyToken(req, res, next) {
     if (req.headers?.authorization?.startsWith('Bearer ')) {
@@ -41,6 +46,7 @@ async function verifyToken(req, res, next) {
 async function run() {
     try {
         await client.connect();
+        
         const database = client.db('online_shop');
         const productCollection = database.collection('products');
         const orderCollection = database.collection('orders');
